@@ -2,6 +2,11 @@ import requests
 from bs4 import BeautifulSoup
 
 
+CHAR_MIN = 4
+CHAR_MAX = 7
+MISSCOUNT_MAX = 7
+
+
 def gaming():
 
     def wordGenerator(website):
@@ -12,65 +17,67 @@ def gaming():
         wordgen = wordgen.lower()
         return wordgen
 
-    missCount = 0
-    diff = (int(input("Difficulty? 1 - 9")))
-    if diff == 1:
-        word = wordGenerator("https://www.coolgenerator.com/4-letter-word-generator")
-    elif diff == 2:
-        word = wordGenerator("https://www.coolgenerator.com/5-letter-word-generator")
-    elif diff == 3:
-        word = wordGenerator("https://www.coolgenerator.com/6-letter-word-generator")
-    elif diff == 4:
-        word = wordGenerator("https://www.coolgenerator.com/7-letter-word-generator")
-    elif diff == 5:
-        word = wordGenerator("https://www.coolgenerator.com/8-letter-word-generator")
-    elif diff == 6:
-        word = wordGenerator("https://www.coolgenerator.com/9-letter-word-generator")
-    elif diff == 7:
-        word = wordGenerator("https://www.coolgenerator.com/10-letter-word-generator")
-    elif diff == 8:
-        word = wordGenerator("https://www.coolgenerator.com/11-letter-word-generator")
-    elif diff == 9:
-        word = wordGenerator("https://www.coolgenerator.com/12-letter-word-generator")
-    else:
-        print("Error")
+    def checkLetter(word, guess):
+        wordindices = ([i for i, x in enumerate(word) if x == guess])
+        for i in range(len(wordindices)):
+            unknownList[wordindices[i]] = guess
+        print(unknownList)
 
+
+    diff = 0
+    while diff < CHAR_MIN or diff > CHAR_MAX:
+        diff = input("Length of word? " + str(CHAR_MIN) + " - " + str(CHAR_MAX) + "  ")
+        flag = True
+        try:
+            diff = int(diff)
+        except ValueError:
+            flag = False
+            diff = 0
+            print("Error. Type an integer only.")
+
+        if flag:
+            if diff >= CHAR_MIN and diff <= CHAR_MAX:
+                string = "https://www.coolgenerator.com/"+str(diff)+"-letter-word-generator"
+                print(string)
+                word = wordGenerator(string)
+            else:
+                print("Error. Type a number within", CHAR_MIN, "-", CHAR_MAX,".")
+
+    # generates blank word
     unknownWord = ("_" * len(word))
     unknownList = list(unknownWord)
     print(unknownList)
-    
-    while missCount != 3:
+    print(word)
+
+    missCount = 0
+    while missCount != MISSCOUNT_MAX:
         guess = input("Guess a letter")
-        to_find = guess
         if len(guess) > 1:
             print("error")
         elif guess not in word:
             missCount = missCount + 1
-            print("You got that wrong!")
+            print("You got that wrong! You have", MISSCOUNT_MAX-missCount, "guesses left!")
         else:
-            wordindices = ([i for i, x in enumerate(word) if x == to_find])
-            for i in range(len(wordindices)):
-                unknownList[wordindices[i]] = guess
-            print(unknownList)
+            checkLetter(word, guess)
         if "_" not in unknownList:
-            missCount = 4
+            missCount = MISSCOUNT_MAX + 1
             break
 
-    if missCount == 3:
+    return missCount, word
+
+missCount = 0
+print("Hangman starts!")
+while missCount <= MISSCOUNT_MAX:
+    missCount, word = gaming()
+
+    if missCount == MISSCOUNT_MAX:
         print("You ran out of guesses!")
-        gameAgain = (input("Do you want to play again? Yes or No"))
-        if gameAgain == "Yes" or gameAgain == "yes":
-            return gaming()
-        else:
-            print("Game over")
-
-    if missCount == 4:
+    else:
         print("You guessed it! The word was '", word, "'!")
-        gameAgain = (input("Do you want to play again? Yes or No"))
-        if gameAgain == "Yes" or gameAgain == "yes":
-            return gaming()
-        else:
-            print("Game over")
 
-
-gaming()
+    gameAgain = (input("Do you want to play again? Yes or No"))
+    if gameAgain == "No" or gameAgain == "no":
+        print("Game over")
+        exit(0)
+    else:
+        missCount = 0
