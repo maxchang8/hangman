@@ -16,7 +16,6 @@ def gaming():
     diff = (int(input("Difficulty? 1 - 9")))
     if diff == 1:
         word = wordGenerator("https://www.coolgenerator.com/4-letter-word-generator")
-        print(word)
     elif diff == 2:
         word = wordGenerator("https://www.coolgenerator.com/5-letter-word-generator")
     elif diff == 3:
@@ -33,13 +32,13 @@ def gaming():
         word = wordGenerator("https://www.coolgenerator.com/11-letter-word-generator")
     elif diff == 9:
         word = wordGenerator("https://www.coolgenerator.com/12-letter-word-generator")
-        print(word)
     else:
         print("Error")
 
     unknownWord = ("_" * len(word))
     unknownList = list(unknownWord)
-
+    print(unknownList)
+    
     while missCount != 3:
         guess = input("Guess a letter")
         to_find = guess
