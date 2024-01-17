@@ -38,7 +38,6 @@ def gaming():
         if flag:
             if diff >= CHAR_MIN and diff <= CHAR_MAX:
                 string = "https://www.coolgenerator.com/"+str(diff)+"-letter-word-generator"
-                print(string)
                 word = wordGenerator(string)
             else:
                 print("Error. Type a number within", CHAR_MIN, "-", CHAR_MAX,".")
@@ -47,7 +46,6 @@ def gaming():
     unknownWord = ("_" * len(word))
     unknownList = list(unknownWord)
     print(unknownList)
-    print(word)
 
     missCount = 0
     while missCount != MISSCOUNT_MAX:
@@ -62,8 +60,8 @@ def gaming():
         if "_" not in unknownList:
             missCount = MISSCOUNT_MAX + 1
             break
-
     return missCount, word
+
 
 missCount = 0
 print("Hangman starts!")
