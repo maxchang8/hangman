@@ -74,8 +74,11 @@ while missCount <= MISSCOUNT_MAX:
         print("You guessed it! The word was '", word, "'!")
 
     gameAgain = (input("Do you want to play again? Yes or No"))
-    if gameAgain == "No" or gameAgain == "no":
+    if gameAgain == "N" or gameAgain == "n":
         print("Game over")
         exit(0)
-    else:
+    if gameAgain == "Y" or gameAgain == "y":
         missCount = 0
+    else:
+        print("Error. Game over")
+        exit(1)
